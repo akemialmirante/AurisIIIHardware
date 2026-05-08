@@ -1,0 +1,26 @@
+#!/bin/bash
+
+cd /home/auris || exit 1
+
+echo "=============================="
+echo "Iniciando Auris III"
+echo "=============================="
+
+echo ""
+echo "1/2 - Preparando áudio..."
+python3 auris_audio_setup.py
+
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "Erro ao preparar o áudio. O Auris III não será iniciado."
+    exit 1
+fi
+
+echo ""
+echo "2/2 - Iniciando programa principal..."
+python3 auris_main.py
+
+echo ""
+echo "Auris III encerrado."
+
+
