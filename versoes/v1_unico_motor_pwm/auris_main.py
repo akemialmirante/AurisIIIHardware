@@ -7,10 +7,10 @@ import subprocess
 PORTA = '/dev/ttyACM0'
 BAUD = 115200
 
-BLOCO = 1024
+BLOCO = 1024  #antes era  1024
 GANHO = 8.0
 NOISE_GATE = 0.015
-SUAVIZACAO = 0.2
+SUAVIZACAO = 0.4 #antes era 0.2
 VALOR_MAXIMO = 255
 
 FONTE_SISTEMA = "auris_combined.monitor"
@@ -110,8 +110,6 @@ def processar_audio(audio):
 
     enviar_pwm(pwm)
 
-    print(f"rms={rms_gate:.4f} nivel={nivel:.4f} suave={nivel_suave:.4f} pwm={pwm}")
-
 
 def iniciar_microfone():
     dispositivo = encontrar_dispositivo_por_nome("USB PnP", entrada=True)
@@ -167,11 +165,16 @@ def iniciar_audio_sistema():
         "-d", FONTE_SISTEMA,
         "--raw",
         "--format=float32le",
+	"--latency-msec=45",
         f"--rate={AMOSTRAGEM_SISTEMA}",
         f"--channels={CANAIS_SISTEMA}"
     ]
 
-    processo = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    processo = subprocess.Popen(
+	cmd,
+	stdout=subprocess.PIPE,
+	bufsize=0
+	)
 
     print("\nUsando áudio interno/navegador.")
     print(f"Fonte: {FONTE_SISTEMA}")
@@ -245,6 +248,5 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
