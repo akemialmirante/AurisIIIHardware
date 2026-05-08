@@ -1,3 +1,4 @@
+#Nesse código unimos o loopback e o vibracall, adicionando também uma parte para selecionar a fonte de audio (mic ou interno)
 import sounddevice as sd
 import numpy as np
 import serial
