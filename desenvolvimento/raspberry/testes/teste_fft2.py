@@ -9,12 +9,12 @@ BLOCO = 2048
 LATENCIA = 45
 
 GANHO_GRAVE = 8.0
-GANHO_MEDIO = 35.0
-GANHO_AGUDO = 90.0
+GANHO_MEDIO = 34.0
+GANHO_AGUDO = 26.0
 
 GATE_GRAVE = 0.00012
 GATE_MEDIO = 0.0005
-GATE_AGUDO = 0.00012
+GATE_AGUDO = 0.00025
 
 SUAVIZACAO_GRAVE = 0.25
 SUAVIZACAO_MEDIO = 0.20
@@ -46,10 +46,18 @@ idx_agudo = (freqs >= 3000) & (freqs < 7000)
 print("Teste FFT com energia real iniciado.")
 print("Ctrl+C para sair.")
 
-def energia_banda(espectro, indices):
-    if not np.any(indices):
+def energia_banda(espectro, indices, modo="media"):
+    valores = espectro[indices]
+
+    if valores.size == 0:
         return 0.0
-    return np.mean(espectro[indices]) / BLOCO
+
+    if modo == "picos":
+        quantidade = min(12, valores.size)
+        maiores = np.sort(valores)[-quantidade:]
+        return np.mean(maiores) / BLOCO
+
+    return np.mean(valores) / BLOCO
 
 
 def aplicar_gate(valor, gate):
@@ -96,9 +104,9 @@ try:
         fft = np.fft.rfft(sinal)
         espectro = np.abs(fft)
 
-        grave = energia_banda(espectro, idx_grave)
-        medio = energia_banda(espectro, idx_medio)
-        agudo = energia_banda(espectro, idx_agudo)
+        grave = energia_banda(espectro, idx_grave, "media")
+        medio = energia_banda(espectro, idx_medio, "media")
+        agudo = energia_banda(espectro, idx_agudo, "picos")
 
         grave = aplicar_gate(grave, GATE_GRAVE)
         medio = aplicar_gate(medio, GATE_MEDIO)
