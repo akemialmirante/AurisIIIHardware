@@ -1,13 +1,13 @@
 #!/bin/bash
 
-cd /home/auris/AurisIIIHardware/desenvolvimento/raspberry || exit 1
+cd /home/auris || exit 1
 
 echo "=============================="
 echo "Iniciando Auris III"
 echo "=============================="
 
 echo ""
-echo "1/2 - Preparando áudio..."
+/home/auris/AurisIIIHardware/desenvolvimento/raspberryecho "1/2 - Preparando áudio..."
 python3 auris_audio_setup.py
 
 if [ $? -ne 0 ]; then
